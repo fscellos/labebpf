@@ -23,4 +23,7 @@ sudo bcc/examples/hello_world.py
 ```
 
 Si tout se passe bien vous devriez voir quelque chose comme ça (affichage d'un message pour les différents process créés; pas de soucis ceux-ci sont probablement lié au server VSCode installé dans la VM)
+
 ![helloworld](images/hello_world.png)
+
+Ok, vous vous en doutez probablement, mais vous venez d'exécuter votre premier programme eBPF avec BCC.
