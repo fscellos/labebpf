@@ -27,3 +27,25 @@ Si tout se passe bien vous devriez voir quelque chose comme ça (affichage d'un 
 ![helloworld](images/hello_world.png)
 
 Ok, vous vous en doutez probablement, mais vous venez d'exécuter votre premier programme eBPF avec BCC.
+
+# Lab 1
+
+Si sur CentOS/7 la manipulation n'était pas nécessaire, sur CentOS/8 elle semble l'être pour que le programme ci-dessus fonctionne 
+
+```
+cat 1 > /sys/kernel/debug/tracing/events/syscalls/sys_enter_mkdir/enable
+```
+
+Executer le script directoryCreate.py dans un second terminal et vous devriez obtenir ceci :
+
+![directorycreate](images/DirectoryCreate.png)
+
+Il n'est pas facile de savoir à quelle event attacher sa probe (en effet les traitements enregsitrent ces probes dynamiquement sur le système).
+Néanmoins un sous-ensemble de celles qui sont disponible sur le système sont consultables ici :
+* /sys/kernel/debug/tracing/available_filter_functions
+
+On pourra aussi trouver la liste des kprobes actives sur le système en consultant le contenu de ce fichier :
+* /sys/kernel/debug/tracing/kprobe_events
+
+Enfin, il faut s'assurer que celle qu'on cherche à suivre n'est pas blacklisté. A consulter dans :
+* /sys/kernel/debug/kprobes/blacklists
