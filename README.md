@@ -74,3 +74,32 @@ Dans le code C on initialise ensuite la structure, puis on appelle une fonction 
 On soumet ensuite cette structure dans le canal "events"
 
 Côté Python on récupère la structure C qu'on caste vers un structure python (en utilisant la librairie ctypes et les tables de conversion suivante : https://docs.python.org/2/library/ctypes.html#fundamental-data-types)
+
+# Lab 3
+On commence par définir la MAP
+
+```
+BPF_HASH(compteur); // equivalent to BPF_HASH(compteur, u64);
+```
+
+A noter que le second paramètre correspond au type de la clé de la map (peut être une chaine). Par dégfaut, c'est u64.
+
+Ce qu'on fait ici :
+
+```
+	u64 index_compteur = 0;	// index variable to access compteur elements
+	u64 *compteur_pointeur;// to read content of element chosen with index_compteur
+    u64 nouveauCompteur=1; // to update content of element chosen with index_compteur
+    compteur_pointeur = compteur.lookup(&index_compteur);
+
+    nouveauCompteur = *compteur_pointeur + 1;
+    bpf_trace_printk("Nombre de dossier(s) : %d\\n", nouveauCompteur);
+    compteur.delete(&index_compteur);
+        
+	compteur.update(&index_compteur, &nouveauCompteur);
+	return 0; // always return 
+```
+On lit la donnée à la clé d'index 0. L'adresse de la valeur est copié dans le pointeur compteur_pointeur.
+On incrément 1 à la valeur récupérée et on affiche le nouveau compteur.
+
+On supprime l'ancien compteur et on met à jour la MAP (index 0) avec la nouvelle valeur
