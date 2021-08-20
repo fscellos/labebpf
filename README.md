@@ -103,3 +103,23 @@ On lit la donnée à la clé d'index 0. L'adresse de la valeur est copié dans l
 On incrément 1 à la valeur récupérée et on affiche le nouveau compteur.
 
 On supprime l'ancien compteur et on met à jour la MAP (index 0) avec la nouvelle valeur
+
+# Lab 4
+Pour le test on peut installer hping3.
+Pour cela lancer les commandes suivantes en root :
+
+```
+dnf install epel-release
+dnf install hping3
+```
+
+Ensuite pour tester le fonctionnement de l'anti DDOS, depuis plusieurs terminaux, lancer la commande suivante :
+
+```
+hping 192.168.56.56 -S -A -V -p 22 -i u100
+```
+
+Pour l'écriture du programme :
+* Bien se souvenir que les probes possibles sont retrouvables (pour partie d'entres elles) dans /sys/kernel/debug/tracing/available_filter_functions
+* Quand vous l'aurez déterminer, même si ça n'est pas utile pour ce programme, rechercher la signature complète dans les sources du kernel (ex :  find /usr/src/kernels/4.18.0-331.el8.x86_64/ -type f | xargs grep XXXX). ;Il faut savoir que tous les paramètres de cette fonction sont aussi disponibles pour votre fonction eBPF après le pointeur sur la structure pt_regs qui est toujours présent)
+* Pour la correction on utilisera une MAP (BPF_HASH) dont le premier index contiendra le nombre de packet reçu et le second index le temps associé à ce paquet
