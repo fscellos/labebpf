@@ -34,6 +34,10 @@ print("Pour stopper eBPF ..... Ctrl+C")
 
 
 # ------------------- Reading traces and displaying them ------------------
-b.trace_print()
+while 1:
+        # b.trace_fields() parses traces and saves result into a tuple
+	(task, pid, cpu, flags, ts, msg) = b.trace_fields()
+        # Customize the display to user
+	print("%s at : %f ==> %s " % (msg, ts, task))
 # ------------------ End part 3 - Report to user --------------------------
 # -------------------------------------------------------------------------

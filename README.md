@@ -49,3 +49,28 @@ On pourra aussi trouver la liste des kprobes actives sur le système en consulta
 
 Enfin, il faut s'assurer que celle qu'on cherche à suivre n'est pas blacklisté. A consulter dans :
 * /sys/kernel/debug/kprobes/blacklists
+
+# Lab 2
+On ajout un timestamp en sortie en utilisant le deuxième mécanisme de communication avec le User space (le BPF_PERF_OUTPUT)
+
+On définit cette fois la structure suivante dans le code C et un canal nommé "events"
+
+```
+struct timestamp_mkdir_class{
+    u64 timestamp_mkdir;
+};
+
+// Create a channel in PERF BUFFER
+BPF_PERF_OUTPUT(events);
+```
+
+On référencera ce canal pour récupérer les informations issues de la fonction eBPF depuis le code python :
+
+```
+b["events"].open_perf_buffer(afficher_evenement)
+```
+
+Dans le code C on initialise ensuite la structure, puis on appelle une fonction fournie par bcc pour récupérer le timestamp système (cf. https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md: cf. pas très utile)
+On soumet ensuite cette structure dans le canal "events"
+
+Côté Python on récupère la structure C qu'on caste vers un structure python (en utilisant la librairie ctypes et les tables de conversion suivante : https://docs.python.org/2/library/ctypes.html#fundamental-data-types)
